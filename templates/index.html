@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'static.css')}}" type="text/css" />
+    
     <title>Document</title>
 </head>
 <body>
     
-    {% for task in tasks%}
-   <p> {{task.id}} : <em> {{task.Name}}</em> : {{task.Description}} : {{task.urgent}} </p>
+    <h1>TO DO LIST</h1>
+   {% for task in tasks%}
+  
+   <p><span class="{% if task.urgent %}urgent{% endif %} {% if task.done %}done{% endif %}"> {{ task.Name }}: {{task.Description}} : {{task.urgent}} : {{task.done}}</span><br><a href="/edit/{{ task.id }}">Edit</a></p>
    {% endfor %}
    
+
    <a href="/add">Add Item</a>
    
 </body>

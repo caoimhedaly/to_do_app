@@ -9,18 +9,21 @@ tasks = {
         'id': 1,
      'Name': "Vacuum",
      'Description': '10am',
-     "urgent": True
+     "urgent": True,
+     "done": True
+     
     },
     2: {
         'id': 2,
      'Name': "Wash floor",
      'Description': '11am',
-     "urgent": True
+     "urgent": True,
+     "done": True
     }
     }
  
+
 next_id = 3 
- 
  
 @app.route("/add", methods=["GET", "POST"])    
 def add_items():
@@ -31,13 +34,14 @@ def add_items():
         
         name_add = request.form["name"]
         description_add = request.form["description"]
-        # urgent_add = request.form["urgent"]
+        
         
         new_item = {
             "id": next_id,
             "Name": name_add,
             "Description": description_add,
-            "urgent": "urgent" in request.form
+            "urgent": "urgent" in request.form,
+            "done": "done" in request.form
         }
         
         
@@ -49,13 +53,38 @@ def add_items():
 
 
 
-
-
 @app.route("/")
 def showHi():
     return render_template("index.html", tasks=tasks.values())
+    
+@app.route("/add", methods = ["POST", "GET"])
+def getID():
+    id = request.args.get("next_id")
+    return redirect("/edit/" + id)
+    
+    
+    
+    
+@app.route("/edit/<int:id>", methods = ["POST", "GET"])
+def showEdit(id):
+    if request.method == "POST":
+        changed_item = {
+            "id": id,
+            "Name": request.form["name"] ,
+            "Description": request.form["description"],
+            "urgent": "urgent" in request.form,
+            "done": "done" in request.form
+        }
+        tasks[id] = changed_item
+        return redirect("/")
+       
+    else:
+        return render_template("edit_task_form.html", task= tasks[id])
+   
 
 
+
+    
 
 
 
